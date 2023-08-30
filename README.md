@@ -1,0 +1,1 @@
+# phpmf-api-stub-generator
