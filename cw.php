@@ -31,7 +31,7 @@ $api=json_decode(file_get_contents($argv[1]), true);
 $write_to = $argv[2];
 
 // These are two files from the rest-api example and not needed
-/*
+
 if file_exists($write_to . "/plugins/calc.php") {
    unlink($write_to . "/plugins/calc.php");
 }
