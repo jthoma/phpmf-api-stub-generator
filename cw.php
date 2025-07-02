@@ -1,5 +1,26 @@
 <?php
 
+function copydir($src, $tgt) {
+    $dir = opendir($src);
+
+    // Make the destination directory if it doesn't exist
+    @mkdir($tgt);
+
+    while (false !== ($file = readdir($dir))) {
+        if (($file != '.') && ($file != '..')) {
+            if (is_dir($src . '/' . $file)) {
+                // Recursively call the function for subdirectories
+                copydir($src . '/' . $file, $tgt . '/' . $file);
+            } else {
+                // Copy the file
+                copy($src . '/' . $file, $tgt . '/' . $file);
+            }
+        }
+    }
+    closedir($dir);
+}
+
+
 if ( count($argv) < 3 ){
  ?>Usage: 
    php -q cw.php rest-api.json code-directory 
@@ -7,16 +28,7 @@ if ( count($argv) < 3 ){
    note that here the concise and practical JSON 
     definition (OpenAPI-style) for the REST API
     is expected as the rest-api.json and the directory
-    should contain the basic structure for phpmf 
-    as in rest-api example git hub
-
-    https://github.com/jthoma/phpmf/tree/master/examples/rest-api
-    https://github.com/jthoma/phpmf/blob/master/examples/plugins/mysql.php
-
-    additionally make sure to copy MF.php into this folder from code repo
-
-    https://github.com/jthoma/phpmf/blob/master/src/MF.php
-
+    should contain the basic structure for phpmf from cw-base
 
     Note 
       if you are not aware of the OpenAPI-style defenition make use of AI tools like chat gpt or gemini.
@@ -25,21 +37,18 @@ if ( count($argv) < 3 ){
   <?   
 }
 
-echo "Now trying to analyze the defenition ... \n\n";
 
 $api=json_decode(file_get_contents($argv[1]), true); 
 $write_to = $argv[2];
 
-// These are two files from the rest-api example and not needed
+echo "Copying base fies to $write_to !";
+copydir('./cw-base/' , $write_to);
 
-if file_exists($write_to . "/plugins/calc.php") {
-   unlink($write_to . "/plugins/calc.php");
-}
+/* we dont need the README.md in the target dir */
+@unlink(rtrim($write_to, "/") . '/README.md');
 
-if file_exists($write_to . "/plugins/gproc.php") {
-   unlink($write_to . "/plugins/gproc.php");
-}
-*/
+echo "Now trying to analyze the defenition ... \n\n";
+
 $keys = array_keys($api);
 
 $epl = $api[$keys[0]]['endpoints'];
