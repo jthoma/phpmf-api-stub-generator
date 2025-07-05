@@ -24,5 +24,5 @@ MF::addaction('before-handler','jsonContentHeader');
 
 
 // if request is undefined, just output unauthorized
-// since we are hanlding an api
+// since we are handling an api
 MF::run('', 403);

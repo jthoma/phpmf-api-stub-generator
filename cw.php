@@ -41,7 +41,7 @@ if ( count($argv) < 3 ){
 $api=json_decode(file_get_contents($argv[1]), true); 
 $write_to = $argv[2];
 
-echo "Copying base fies to $write_to !";
+echo "Copying base fies to $write_to !\n\n";
 copydir('./cw-base/' , $write_to);
 
 /* we dont need the README.md in the target dir */
